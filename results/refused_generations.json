@@ -1,0 +1,542 @@
+[
+  {
+    "reason": "invalid JSON response",
+    "lure": "account_suspended",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "account_suspended",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "account_suspended",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "account_suspended",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "account_suspended",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "account_suspended",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "account_suspended",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "account_suspended",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "account_suspended",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "account_suspended",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "account_suspended",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "account_suspended",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "account_suspended",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "account_suspended",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "account_suspended",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "account_suspended",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "account_suspended",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 2
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 2
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 2
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 2
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 2
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "it_alert",
+    "attempt": 2
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "hr_notice",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "hr_notice",
+    "attempt": 2
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "hr_notice",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "hr_notice",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "hr_notice",
+    "attempt": 2
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "hr_notice",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "hr_notice",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "hr_notice",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "hr_notice",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "hr_notice",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "hr_notice",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "hr_notice",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "delivery_scam",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "delivery_scam",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "delivery_scam",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "delivery_scam",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "delivery_scam",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "delivery_scam",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "delivery_scam",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "delivery_scam",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "invoice_fraud",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "invoice_fraud",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "invoice_fraud",
+    "attempt": 2
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "invoice_fraud",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "invoice_fraud",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "invoice_fraud",
+    "attempt": 2
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "invoice_fraud",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "invoice_fraud",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "invoice_fraud",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "invoice_fraud",
+    "attempt": 2
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "invoice_fraud",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "invoice_fraud",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "invoice_fraud",
+    "attempt": 1
+  },
+  {
+    "reason": "too short (37 words)",
+    "lure": "invoice_fraud",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 2
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 2
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 3
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 2
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 3
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 2
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  },
+  {
+    "reason": "invalid JSON response",
+    "lure": "password_reset",
+    "attempt": 1
+  }
+]
