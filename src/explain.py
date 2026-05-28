@@ -1,7 +1,7 @@
 """
 explain.py
 ──────────
-Day 6 — SHAP token-level explainability for the DistilBERT classifier.
+SHAP token-level explainability for the DistilBERT classifier.
 Run:
     python src/explain.py
 
@@ -31,10 +31,6 @@ SPLITS_DIR  = Path("data/processed/splits")
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
 MAX_LENGTH  = 128
-
-print(f"\n{'='*60}")
-print(f"  Day 6 — SHAP Explainability & Heatmaps")
-print(f"{'='*60}\n")
 
 # ── Load model ────────────────────────────────────────────────────────────────
 print("── Loading model ──")
@@ -266,7 +262,7 @@ def main():
     predict_code = '''"""
 predict.py
 ──────────
-Inference module used by the Streamlit app (Day 9).
+Inference module used by the Streamlit app.
 Import this in app.py to classify any email and get token attributions.
 
 Usage:
@@ -393,16 +389,10 @@ if __name__ == "__main__":
     print(f"  Test email verdict    : {r['verdict']} ({r['confidence']*100:.1f}%)")
     print(f"  Top phishing tokens   : {[t for t,s in r['top_tokens'][:5]]}")
 
-    print(f"\n{'='*60}")
-    print(f"  DAY 6 COMPLETE ✓")
-    print(f"{'='*60}")
     print(f"  Heatmaps saved : results/heatmaps/ ({len(examples)} files)")
     print(f"  predict.py     : src/predict.py")
     print(f"\n  Open any .html file in results/heatmaps/ in your browser")
     print(f"  to see the token attribution heatmap.")
-    print(f"\n  Next: python src/adversarial_eval.py  (Day 7/8)")
-    print(f"{'='*60}\n")
-
 
 if __name__ == "__main__":
     main()

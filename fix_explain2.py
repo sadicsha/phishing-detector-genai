@@ -15,10 +15,6 @@ SPLITS_DIR  = Path("data/processed/splits")
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 MAX_LENGTH  = 128
 
-print("\n" + "="*60)
-print("  Day 6 - Explainability & Heatmaps")
-print("="*60 + "\n")
-
 tokenizer = DistilBertTokenizerFast.from_pretrained(MODELS_DIR)
 model     = DistilBertForSequenceClassification.from_pretrained(MODELS_DIR)
 model.eval()
@@ -210,11 +206,3 @@ if __name__ == "__main__":
 '''
 Path("src/predict.py").write_text(predict_src, encoding="utf-8")
 print("-- predict.py saved -> src/predict.py\n")
-
-print("="*60)
-print("  DAY 6 COMPLETE")
-print("="*60)
-print("  Heatmaps -> results/heatmaps/  (open .html in browser)")
-print("  predict.py -> src/predict.py")
-print("  Next: python src/adversarial_eval.py")
-print("="*60 + "\n")

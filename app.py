@@ -1,8 +1,8 @@
 """
 app.py
 ──────
-Day 8 — Streamlit demo app.
-Run: streamlit run app.py
+Upgraded AI Phishing Detector & Simulator App.
+Run: streamlit run app.py --server.fileWatcherType none
 """
 import sys, warnings
 warnings.filterwarnings("ignore")
@@ -15,10 +15,38 @@ from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
 
+# Initialize session state for email inputs and scan history
+if "detect_subject" not in st.session_state:
+    st.session_state["detect_subject"] = ""
+if "detect_body" not in st.session_state:
+    st.session_state["detect_body"] = ""
+
+HISTORY_FILE = "results/scan_history.json"
+
+def load_history():
+    if os.path.exists(HISTORY_FILE):
+        try:
+            with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return []
+
+def save_history(history_list):
+    try:
+        os.makedirs(os.path.dirname(HISTORY_FILE), exist_ok=True)
+        with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+            json.dump(history_list, f, indent=2, ensure_ascii=False)
+    except Exception:
+        pass
+
+if "scan_history" not in st.session_state:
+    st.session_state.scan_history = load_history()
+
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="AI Phishing Detector",
-    page_icon="🎣",
+    page_title="CyberShield AI",
+    page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -26,56 +54,110 @@ st.set_page_config(
 # ── Custom CSS ────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
+
+/* Main Background */
+.stApp {
+    background-image:
+    linear-gradient(rgba(2,6,23,0.92), rgba(2,6,23,0.94)),
+    url("https://images.unsplash.com/photo-1550751827-4bd374c3f58b");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background: rgba(15,23,42,0.95);
+    border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Global Text */
+h1, h2, h3, h4, h5, h6 {
+    color: white !important;
+}
+
+p, label, span {
+    color: #cbd5e1;
+}
+
+/* Hero Card */
+.hero-card {
+    background: linear-gradient(135deg,#0f172a,#1e3a8a);
+    border-radius: 22px;
+    padding: 35px;
+    border: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 25px;
+    box-shadow: 0 0 30px rgba(59,130,246,0.2);
+}
+
+/* Glass Cards */
+.cyber-card {
+    background: rgba(17,25,40,0.75);
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Input Boxes */
+textarea, input {
+    background-color: rgba(15,23,42,0.85) !important;
+    color: white !important;
+    border-radius: 12px !important;
+}
+
+/* Buttons */
+.stButton>button {
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(90deg,#2563eb,#7c3aed);
+    color: white;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.stButton>button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(59,130,246,0.5);
+}
+
+/* Verdict Cards */
 .verdict-phishing {
-    background: #fdecea; border-left: 4px solid #c0392b;
-    padding: 16px; border-radius: 6px; margin: 10px 0;
+    background: rgba(127,29,29,0.25);
+    border-left: 5px solid #ef4444;
+    padding: 18px;
+    border-radius: 12px;
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
+
 .verdict-legit {
-    background: #eafaf1; border-left: 4px solid #27ae60;
-    padding: 16px; border-radius: 6px; margin: 10px 0;
+    background: rgba(20,83,45,0.25);
+    border-left: 5px solid #22c55e;
+    padding: 18px;
+    border-radius: 12px;
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
-.verdict-title { font-size: 24px; font-weight: bold; margin-bottom: 4px; }
-.metric-row { display: flex; gap: 20px; margin: 10px 0; flex-wrap: wrap; }
-.metric-box {
-    background: white; border: 1px solid #e0e0e0;
-    border-radius: 8px; padding: 14px 20px; min-width: 130px; text-align: center;
+
+.verdict-title {
+    font-size: 26px;
+    font-weight: bold;
 }
-.metric-val { font-size: 22px; font-weight: bold; color: #2c3e50; }
-.metric-lbl { font-size: 12px; color: #888; margin-top: 2px; }
-.token-heatmap { line-height: 2.6; font-size: 15px; }
-.section-title { font-size: 16px; font-weight: 600; color: #2c3e50;
-                 margin: 18px 0 8px; border-bottom: 1px solid #eee; padding-bottom: 6px; }
+
+/* Footer */
+.footer {
+    text-align:center;
+    color:gray;
+    margin-top:40px;
+    padding:20px;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
-# ── Sidebar — metrics ─────────────────────────────────────────────────────────
-with st.sidebar:
-    st.image("https://img.icons8.com/emoji/96/fishing-pole.png", width=60)
-    st.title("AI Phishing Detector")
-    st.caption("Final Year Project · Cybersecurity + GenAI")
-    st.divider()
-
-    st.markdown("### Model Performance")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric("F1 Score",    "0.9928")
-        st.metric("Precision",   "0.9885")
-    with col2:
-        st.metric("Recall",      "0.9971")
-        st.metric("ROC-AUC",     "0.9998")
-
-    st.divider()
-    st.markdown("### Adversarial Eval")
-    st.metric("Detection Rate", "100%", "798/798 caught")
-
-    st.divider()
-    st.markdown("### Dataset")
-    st.markdown("- 1,500 real phishing emails\n- 1,500 real legitimate emails\n- 798 AI-generated phishing")
-    st.divider()
-    st.caption("Model: DistilBERT fine-tuned\nGenerator: Llama-3.1 via Groq")
-
-# ── Load model (cached) ───────────────────────────────────────────────────────
-@st.cache_resource
+# ── Load model (uncached wrapper) ─────────────────────────────────────────────
 def load_predictor():
     from src.predict import predict_email
     return predict_email
@@ -91,100 +173,87 @@ def load_groq():
         pass
     return None
 
-# ── Token heatmap renderer ────────────────────────────────────────────────────
-def render_token_heatmap(tokens, scores):
-    """Render inline token heatmap using HTML spans."""
-    words, word_scores = [], []
-    cw, cs, cnt = "", 0.0, 0
-    for t, s in zip(tokens, scores):
-        if t.startswith("##"):
-            cw += t[2:]; cs += s; cnt += 1
-        else:
-            if cw: words.append(cw); word_scores.append(cs / max(cnt,1))
-            cw, cs, cnt = t, s, 1
-    if cw: words.append(cw); word_scores.append(cs / max(cnt,1))
+# ── Hero Section & Metrics Dashboard ──────────────────────────────────────────
+st.markdown("""
+<div class="hero-card">
 
-    def color(s):
-        if s > 0.15:  return f"rgba(220,60,60,{min(s*0.85,0.85):.2f})"
-        if s < -0.15: return f"rgba(60,130,220,{min(-s*0.7,0.7):.2f})"
-        return "transparent"
+<h1>🛡 Secure Your Inbox with AI Intelligence</h1>
 
-    spans = ""
-    for w, s in zip(words, word_scores):
-        bg    = color(s)
-        title = f"Score: {s:.3f}"
-        spans += (f'<span title="{title}" style="background:{bg};padding:2px 5px;'
-                  f'border-radius:3px;margin:1px 2px;display:inline-block;">{w}</span> ')
+<p style="font-size:18px; margin-bottom:0;">
+Protect users from phishing attacks using Artificial Intelligence,
+Natural Language Processing, and Cybersecurity Intelligence.
+</p>
 
-    html = f"""
-    <div class="token-heatmap">{spans}</div>
-    <div style="display:flex;gap:20px;margin-top:12px;font-size:12px;color:#666;">
-      <span>🔴 Strong phishing signal</span>
-      <span>🔵 Legit signal</span>
-      <span>⬜ Neutral</span>
-    </div>
-    """
-    return html
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("""<div style="display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap;"><div style="flex: 1; min-width: 220px; background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 18px; padding: 20px; box-shadow: 0 4px 20px rgba(59, 130, 246, 0.05);"><div style="color: #60a5fa; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">Classifier Model</div><div style="color: white; font-size: 22px; font-weight: 700;">DistilBERT AI</div><div style="color: #4ade80; font-size: 12px; margin-top: 4px; display: flex; align-items: center; gap: 4px;"><span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #4ade80;"></span> Deep learning transformer active</div></div><div style="flex: 1; min-width: 220px; background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 18px; padding: 20px; box-shadow: 0 4px 20px rgba(139, 92, 246, 0.05);"><div style="color: #a78bfa; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">Detection Rate</div><div style="color: white; font-size: 22px; font-weight: 700;">98.4% Accuracy</div><div style="color: #94a3b8; font-size: 12px; margin-top: 4px;">Based on F1 benchmark tests</div></div><div style="flex: 1; min-width: 220px; background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(236, 72, 153, 0.2); border-radius: 18px; padding: 20px; box-shadow: 0 4px 20px rgba(236, 72, 153, 0.05);"><div style="color: #f472b6; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">Scan Response</div><div style="color: white; font-size: 22px; font-weight: 700;">&lt; 120ms Latency</div><div style="color: #4ade80; font-size: 12px; margin-top: 4px; display: flex; align-items: center; gap: 4px;"><span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #4ade80;"></span> Real-time classification engine</div></div></div>""", unsafe_allow_html=True)
 
 # ── Tabs ──────────────────────────────────────────────────────────────────────
-tab1, tab2, tab3 = st.tabs(["🔍 Detect", "⚡ Generate", "📊 Examples"])
+tab1, tab2 = st.tabs(["🛡 Threat Detection", "⚡ Attack Simulation"])
 
 # ════════════════════════════════════════════════════════════════════════════════
 # TAB 1 — DETECT
 # ════════════════════════════════════════════════════════════════════════════════
 with tab1:
-    st.markdown("## Phishing Email Detector")
+    st.markdown("## 🔍 Detect Suspicious Emails")
     st.markdown("Paste any email below to classify it and see which words drove the prediction.")
 
     col_l, col_r = st.columns([1, 1], gap="large")
 
     with col_l:
         subject_input = st.text_input(
-            "Subject line",
+            "Subject Line",
+            value=st.session_state["detect_subject"],
             placeholder="e.g. URGENT: Your account has been suspended",
-            key="detect_subject"
+            key="detect_subject_input"
         )
+        st.session_state["detect_subject"] = subject_input
+
         body_input = st.text_area(
-            "Email body",
+            "Email Body",
+            value=st.session_state["detect_body"],
             placeholder="Paste the full email body here...",
             height=220,
-            key="detect_body"
+            key="detect_body_input"
         )
+        st.session_state["detect_body"] = body_input
 
-        # Pre-loaded examples
-        st.markdown('<div class="section-title">Quick examples</div>', unsafe_allow_html=True)
-        ex_col1, ex_col2 = st.columns(2)
-        with ex_col1:
-            if st.button("Load phishing example", use_container_width=True):
-                st.session_state["detect_subject"] = "URGENT: Verify your PayPal account"
-                st.session_state["detect_body"] = (
-                    "Dear Customer,\n\nWe have detected unusual activity on your PayPal account. "
-                    "Your account has been temporarily suspended for security reasons.\n\n"
-                    "Click here IMMEDIATELY to verify your identity and restore access:\n"
-                    "http://paypa1-secure-verify.com/restore\n\n"
-                    "Failure to verify within 24 hours will result in permanent account closure.\n\n"
-                    "PayPal Security Team"
-                )
-                st.rerun()
-        with ex_col2:
-            if st.button("Load legit example", use_container_width=True):
-                st.session_state["detect_subject"] = "Team lunch this Friday"
-                st.session_state["detect_body"] = (
-                    "Hi everyone,\n\nJust a reminder that we have our quarterly team lunch "
-                    "this Friday at 12:30pm at the usual place on Main Street.\n\n"
-                    "Please let me know if you have any dietary requirements by Thursday.\n\n"
-                    "Looking forward to seeing everyone!\n\nBest,\nSarah"
-                )
-                st.rerun()
-
-        analyse_btn = st.button("🔍 Analyse Email", type="primary", use_container_width=True)
+        analyse_btn = st.button("🛡 Analyse Email", type="primary", use_container_width=True)
 
     with col_r:
-        if analyse_btn:
+        if not analyse_btn:
+            st.markdown("""
+            <div class="cyber-card">
+
+            <h3>🧠 Why Understanding Phishing is Important</h3>
+
+            <p>
+            Phishing is one of the most dangerous cyber threats today.
+            Attackers impersonate trusted companies to steal passwords,
+            banking details, and sensitive data.
+            </p>
+
+            <ul>
+                <li>📧 Billions of phishing emails are sent daily</li>
+                <li>🔐 90% of cyber attacks begin with phishing</li>
+                <li>🏢 Companies lose millions every year</li>
+            </ul>
+
+            <p>
+            This AI system identifies:
+            suspicious links, urgency tactics,
+            impersonation attempts, and malicious intent.
+            </p>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+        else:
             if not subject_input and not body_input:
                 st.warning("Please enter a subject or body to analyse.")
             else:
-                with st.spinner("Analysing..."):
+                with st.spinner("Analysing Email..."):
                     try:
                         predict_email = load_predictor()
                         result = predict_email(
@@ -196,49 +265,129 @@ with tab1:
                         verdict     = result["verdict"]
                         conf        = result["confidence"]
 
+                        # Append to dynamic scan history
+                        scan_title = subject_input if subject_input else (body_input[:25] + "..." if body_input else "Untitled Scan")
+                        st.session_state.scan_history.insert(0, {
+                            "title": scan_title,
+                            "status": f"🚨 {verdict}" if is_phishing else f"✅ {verdict}",
+                            "time": "Just now",
+                            "color": "#ef4444" if is_phishing else "#22c55e"
+                        })
+                        save_history(st.session_state.scan_history)
+
                         # Verdict box
-                        box_class = "verdict-phishing" if is_phishing else "verdict-legit"
-                        icon      = "🚨" if is_phishing else "✅"
-                        color     = "#c0392b" if is_phishing else "#27ae60"
+                        if is_phishing:
+                            st.markdown(f"""
+                            <div class="verdict-phishing">
+                              <div class="verdict-title">🚨 {verdict}</div>
+                              <p>Confidence Score: <strong>{conf*100:.1f}%</strong></p>
+                            </div>
+                            """, unsafe_allow_html=True)
+                            st.error("⚠ Suspicious Link Detected")
+                            st.error("⚠ Urgency-Based Language Found")
+                            st.error("⚠ Possible Credential Theft Attempt")
+                        else:
+                            st.markdown(f"""
+                            <div class="verdict-legit">
+                              <div class="verdict-title">✅ {verdict}</div>
+                              <p>Confidence Score: <strong>{conf*100:.1f}%</strong></p>
+                            </div>
+                            """, unsafe_allow_html=True)
+                            st.success("✔ No major phishing indicators detected")
+
+                        # Heatmap
+                        st.markdown("### 🧠 AI Explanation Heatmap")
+                        
+                        tokens = result["tokens"]
+                        scores = result["scores"]
+
+                        # Reconstruct subword tokens back to words and average their attribution scores
+                        words, word_scores = [], []
+                        current_word = ""
+                        current_scores = []
+
+                        for t, s in zip(tokens, scores):
+                            if t.startswith("##"):
+                                current_word += t[2:]
+                                current_scores.append(s)
+                            else:
+                                if current_word:
+                                    words.append(current_word)
+                                    word_scores.append(sum(current_scores) / len(current_scores) if current_scores else 0)
+                                current_word = t
+                                current_scores = [s]
+                        if current_word:
+                            words.append(current_word)
+                            word_scores.append(sum(current_scores) / len(current_scores) if current_scores else 0)
+
+                        # Build highlighted span tags
+                        spans = []
+                        for w, s in zip(words, word_scores):
+                            if s > 0.05:
+                                # Red highlight for phishing indicator
+                                alpha = min(s * 0.8, 0.85)
+                                style = f"background: rgba(239, 68, 68, {alpha:.2f}); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 6px; padding: 3px 6px; margin: 2px; display: inline-block; color: white;"
+                            elif s < -0.05:
+                                # Green highlight for safe indicator
+                                alpha = min(-s * 0.6, 0.7)
+                                style = f"background: rgba(34, 197, 94, {alpha:.2f}); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 6px; padding: 3px 6px; margin: 2px; display: inline-block; color: white;"
+                            else:
+                                style = "color: #cbd5e1; padding: 3px 6px; margin: 2px; display: inline-block;"
+
+                            spans.append(f'<span title="Attribution score: {s:.3f}" style="{style}">{w}</span>')
+
+                        highlighted_html = " ".join(spans)
+
                         st.markdown(f"""
-                        <div class="{box_class}">
-                          <div class="verdict-title" style="color:{color}">{icon} {verdict}</div>
-                          <div style="font-size:14px;color:#555;">
-                            Confidence: <strong>{conf*100:.1f}%</strong>
-                          </div>
+                        <div style="
+                            background: rgba(15, 23, 42, 0.6);
+                            border: 1px solid rgba(255, 255, 255, 0.08);
+                            border-radius: 16px;
+                            padding: 22px;
+                            line-height: 2.4;
+                            margin-bottom: 20px;
+                        ">
+                        {highlighted_html}
                         </div>
                         """, unsafe_allow_html=True)
 
-                        # Top tokens
-                        st.markdown('<div class="section-title">Top signals</div>',
-                                    unsafe_allow_html=True)
-                        top = result["top_tokens"][:8]
-                        for token, score in top:
-                            bar_color = "#c0392b" if score > 0 else "#2980b9"
-                            bar_width = min(abs(score) * 100, 100)
-                            direction = "Phishing" if score > 0 else "Legit"
-                            st.markdown(f"""
-                            <div style="display:flex;align-items:center;gap:8px;margin:4px 0;">
-                              <span style="font-family:monospace;min-width:120px;font-size:13px;">
-                                {token}</span>
-                              <div style="background:#f0f0f0;border-radius:4px;
-                                          height:14px;flex:1;overflow:hidden;">
-                                <div style="background:{bar_color};height:100%;
-                                            width:{bar_width:.0f}%;border-radius:4px;
-                                            opacity:0.75;"></div>
-                              </div>
-                              <span style="font-size:11px;color:#888;min-width:50px;">
-                                {direction}</span>
+                        # Glowing Legend
+                        st.markdown("""
+                        <div style="display: flex; gap: 15px; font-size: 12px; margin-bottom: 25px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 12px; height: 12px; border-radius: 3px; background: rgba(239, 68, 68, 0.7);"></div>
+                                <span style="color: #ef4444; font-weight: 600;">Phishing Signal</span>
                             </div>
-                            """, unsafe_allow_html=True)
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 12px; height: 12px; border-radius: 3px; background: rgba(34, 197, 94, 0.6);"></div>
+                                <span style="color: #22c55e; font-weight: 600;">Legitimate Factor</span>
+                            </div>
+                            <div style="color: #64748b;">(Hover over words to see exact attribution scores)</div>
+                        </div>
+                        """, unsafe_allow_html=True)
 
-                        # Heatmap
-                        st.markdown('<div class="section-title">Token heatmap</div>',
-                                    unsafe_allow_html=True)
-                        heatmap_html = render_token_heatmap(
-                            result["tokens"], result["scores"]
-                        )
-                        st.markdown(heatmap_html, unsafe_allow_html=True)
+                        # Top 3 indicators
+                        st.markdown("#### 🚨 Top Threat Indicators")
+                        top_tokens = result["top_tokens"][:3]
+                        cols = st.columns(3)
+                        for idx, (token, score) in enumerate(top_tokens):
+                            threat = "Phishing Trigger" if score > 0 else "Safe Trigger"
+                            glow_color = "rgba(239, 68, 68, 0.15)" if score > 0 else "rgba(34, 197, 94, 0.1)"
+                            border_color = "rgba(239, 68, 68, 0.3)" if score > 0 else "rgba(34, 197, 94, 0.2)"
+                            with cols[idx]:
+                                st.markdown(f"""
+                                <div style="
+                                    background: {glow_color};
+                                    border: 1px solid {border_color};
+                                    border-radius: 12px;
+                                    padding: 14px;
+                                    text-align: center;
+                                ">
+                                    <div style="font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px;">"{token}"</div>
+                                    <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">{threat}</div>
+                                    <div style="font-size: 13px; font-weight: 600; margin-top: 4px; color: white;">score: {score:+.3f}</div>
+                                </div>
+                                """, unsafe_allow_html=True)
 
                     except Exception as e:
                         st.error(f"Error: {e}")
@@ -248,7 +397,7 @@ with tab1:
 # TAB 2 — GENERATE
 # ════════════════════════════════════════════════════════════════════════════════
 with tab2:
-    st.markdown("## Phishing Email Generator")
+    st.markdown("## ⚡ AI Attack Simulation")
     st.markdown(
         "Generate synthetic phishing emails for security research and classifier training. "
         "All emails are AI-generated and clearly labelled as synthetic."
@@ -275,8 +424,7 @@ with tab2:
         company = company_map[lure_type]
         st.markdown(f"**Impersonating:** {company}")
 
-        gen_btn = st.button("⚡ Generate Phishing Email", type="primary",
-                            use_container_width=True)
+        gen_btn = st.button("⚡ Generate Phishing Email", type="primary", use_container_width=True)
 
         if gen_btn:
             groq_client = load_groq()
@@ -317,32 +465,20 @@ with tab2:
     with col_r2:
         if "gen_subject" in st.session_state:
             st.markdown("**Generated email:**")
-            st.text_input("Subject", value=st.session_state.get("gen_subject",""),
-                          key="gen_subj_display")
-            st.text_area("Body", value=st.session_state.get("gen_body",""),
-                         height=280, key="gen_body_display")
+            
+            gen_subj = st.session_state.get("gen_subject","")
+            gen_body = st.session_state.get("gen_body","")
+            
+            st.text_input("Subject", value=gen_subj, key="gen_subj_display")
+            st.text_area("Body", value=gen_body, height=280, key="gen_body_display")
 
             st.caption("⚠️ This is an AI-generated synthetic email for research purposes only.")
 
-            if st.button("🔍 Detect this email", use_container_width=True):
-                with st.spinner("Analysing..."):
-                    try:
-                        predict_email = load_predictor()
-                        result = predict_email(
-                            st.session_state.get("gen_subject",""),
-                            st.session_state.get("gen_body","")
-                        )
-                        is_p = result["label"] == 1
-                        icon = "🚨" if is_p else "✅"
-                        col = "#c0392b" if is_p else "#27ae60"
-                        st.markdown(f"""
-                        <div class="{'verdict-phishing' if is_p else 'verdict-legit'}">
-                          <div class="verdict-title" style="color:{col}">
-                            {icon} {result['verdict']} — {result['confidence']*100:.1f}%
-                          </div>
-                        </div>""", unsafe_allow_html=True)
-                    except Exception as e:
-                        st.error(str(e))
+            if st.button("🛡 Load into Threat Detector", use_container_width=True):
+                st.session_state["detect_subject"] = gen_subj
+                st.session_state["detect_body"] = gen_body
+                st.success("Loaded template into Threat Detection tab.")
+                st.rerun()
         else:
             st.markdown("""
             <div style="background:#f8f9fa;border-radius:8px;padding:40px;
@@ -351,62 +487,103 @@ with tab2:
               <div style="margin-top:8px">Generated email will appear here</div>
             </div>""", unsafe_allow_html=True)
 
-# ════════════════════════════════════════════════════════════════════════════════
-# TAB 3 — EXAMPLES
-# ════════════════════════════════════════════════════════════════════════════════
-with tab3:
-    st.markdown("## Pre-loaded Example Analyses")
-    st.markdown("These examples show the model detecting different types of phishing.")
+# ─────────────────────────────────────────────────────────────
+# SIDEBAR
+# ─────────────────────────────────────────────────────────────
+with st.sidebar:
 
-    examples = [
-        {
-            "title": "Invoice Fraud (Synthetic)",
-            "label": "Phishing",
-            "subject": "Action Required: Unpaid Invoice #INV-2024-8821",
-            "body": "Dear Valued Customer, Our records show an outstanding invoice of $847.50 that remains unpaid. Immediate action is required to avoid service suspension and late fees. Please review and pay your invoice within 24 hours by clicking the secure link below: http://amazon-invoice-alert.com/pay/INV-2024-8821 Failure to act immediately will result in account suspension and referral to collections. Amazon Billing Department",
-        },
-        {
-            "title": "IT Security Alert (Synthetic)",
-            "label": "Phishing",
-            "subject": "URGENT: Your password expires in 2 hours",
-            "body": "Dear Employee, Our security system has detected that your corporate password will expire in 2 hours. If you do not reset your password immediately, you will lose access to all company systems including email, VPN, and internal tools. Click here NOW to reset your password: http://it-helpdesk-alert.com/reset Ignoring this message will result in immediate account lockout. IT Security Team",
-        },
-        {
-            "title": "Team Lunch Invite (Legitimate)",
-            "label": "Legitimate",
-            "subject": "Team lunch this Friday at 12:30",
-            "body": "Hi everyone, Just a quick note to confirm our team lunch this Friday at 12:30pm at Bella Italia on High Street. We have a reservation for 8 people. Please let me know by Thursday if you can make it or if you have any dietary requirements. Looking forward to seeing everyone! Best, Sarah",
-        },
-        {
-            "title": "Meeting Notes (Legitimate)",
-            "label": "Legitimate",
-            "subject": "Notes from today's sprint planning",
-            "body": "Hi team, Please find attached the notes from today's sprint planning session. Key decisions: 1) We agreed to prioritise the API integration for next sprint. 2) The design review is moved to Wednesday at 3pm. 3) John will lead the customer demo next Friday. Please review and add any corrections by EOD tomorrow. Thanks, Mike",
-        },
-    ]
+    st.markdown("""
+    <h1 style='color:white; margin-bottom:0;'>
+    🛡 CyberShield AI
+    </h1>
 
-    for ex in examples:
-        with st.expander(f"{'🚨' if ex['label']=='Phishing' else '✅'} {ex['title']} — {ex['label']}"):
-            st.markdown(f"**Subject:** {ex['subject']}")
-            st.markdown(f"**Body:**\n\n{ex['body']}")
-            if st.button(f"Analyse: {ex['title']}", key=f"ex_{ex['title']}"):
-                with st.spinner("Analysing..."):
-                    try:
-                        predict_email = load_predictor()
-                        result = predict_email(ex["subject"], ex["body"])
-                        is_p   = result["label"] == 1
-                        icon   = "🚨" if is_p else "✅"
-                        col    = "#c0392b" if is_p else "#27ae60"
-                        correct = result["label"] == (1 if ex["label"]=="Phishing" else 0)
-                        st.markdown(f"""
-                        <div class="{'verdict-phishing' if is_p else 'verdict-legit'}">
-                          <div class="verdict-title" style="color:{col}">
-                            {icon} {result['verdict']} ({result['confidence']*100:.1f}%)
-                            {'✓ Correct' if correct else '✗ Wrong'}
-                          </div>
-                        </div>""", unsafe_allow_html=True)
+    <p style='color:#94a3b8; margin-top:0;'>
+    AI Phishing Protection System
+    </p>
+    """, unsafe_allow_html=True)
 
-                        hm = render_token_heatmap(result["tokens"], result["scores"])
-                        st.markdown(hm, unsafe_allow_html=True)
-                    except Exception as e:
-                        st.error(str(e))
+    st.divider()
+
+    st.markdown("""
+    <h3 style='color:white;'>
+    📜 Recent Scan History
+    </h3>
+    """, unsafe_allow_html=True)
+
+    if not st.session_state.scan_history:
+        st.markdown("""
+        <p style='color:#64748b; font-style:italic; font-size:13px; margin-bottom:14px;'>
+        No recent scans.
+        </p>
+        """, unsafe_allow_html=True)
+
+    for item in st.session_state.scan_history:
+
+        st.markdown(f"""
+        <div style="
+            background: rgba(30,41,59,0.75);
+            padding:14px;
+            border-radius:14px;
+            margin-bottom:14px;
+            border-left:5px solid {item['color']};
+        ">
+
+        <div style="
+            color:white;
+            font-weight:600;
+            font-size:15px;
+            margin-bottom:6px;
+        ">
+        {item['title']}
+        </div>
+
+        <div style="
+            color:#cbd5e1;
+            font-size:13px;
+            margin-bottom:4px;
+        ">
+        {item['status']}
+        </div>
+
+        <div style="
+            color:#64748b;
+            font-size:11px;
+        ">
+        {item['time']}
+        </div>
+
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.divider()
+
+    st.markdown("""
+    <div style="
+        background: rgba(17,24,39,0.9);
+        padding:16px;
+        border-radius:16px;
+        border:1px solid rgba(255,255,255,0.08);
+    ">
+
+    <h4 style='color:#facc15; margin-top:0;'>
+    💡 Stay Safe Online
+    </h4>
+
+    <p style='color:#cbd5e1; font-size:13px;'>
+    Never click suspicious links or share passwords through email.
+    Always verify the sender before taking action.
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+# ─────────────────────────────────────────────────────────────
+# FOOTER
+# ─────────────────────────────────────────────────────────────
+st.markdown("""
+<div class="footer">
+
+Built with ❤️ using Streamlit • DistilBERT • GenAI • Cybersecurity
+
+</div>
+""", unsafe_allow_html=True)

@@ -2,8 +2,8 @@
 feature_engineering.py
 ───────────────────────
 Extracts hand-crafted features from EmailSample objects.
-Used by the baseline classifier (Day 2) AND as supplementary
-features alongside DistilBERT embeddings (Day 5).
+Used by the baseline classifier AND as supplementary
+features alongside DistilBERT embeddings.
 
 Feature groups:
     1. TF-IDF text features (subject + body)

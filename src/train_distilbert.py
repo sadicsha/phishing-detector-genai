@@ -34,9 +34,6 @@ EPOCHS      = 3
 LR          = 2e-5
 DEVICE      = torch.device("cpu")
 
-print(f"\n{'='*60}")
-print(f"  Day 5 — DistilBERT Fine-tuning (CPU optimized)")
-print(f"{'='*60}")
 print(f"  Batch:{BATCH_SIZE}  MaxLen:{MAX_LENGTH}  Epochs:{EPOCHS}", flush=True)
 
 # ── Dataset ───────────────────────────────────────────────────────────────────
@@ -184,14 +181,9 @@ def main():
         md = f"""# DistilBERT Results\n\n| Metric | RandomForest | DistilBERT | Delta |\n|---|---|---|---|\n| F1 | 0.9843 | {tm['f1']:.4f} | {tm['f1']-0.9843:+.4f} |\n| Precision | 0.9910 | {tm['precision']:.4f} | {tm['precision']-0.9910:+.4f} |\n| Recall | 0.9778 | {tm['recall']:.4f} | {tm['recall']-0.9778:+.4f} |\n| ROC-AUC | 0.9991 | {tm['roc_auc']:.4f} | {tm['roc_auc']-0.9991:+.4f} |\n\n```\n{report}\n```\n"""
         (RESULTS_DIR/"distilbert_results.md").write_text(md)
 
-        print(f"\n{'='*60}")
-        print(f"  DAY 5 COMPLETE ✓")
-        print(f"{'='*60}")
         print(f"  DistilBERT F1 : {tm['f1']:.4f}")
         print(f"  Baseline F1   : 0.9843")
         print(f"  Model saved   : models/distilbert/")
-        print(f"  Next          : python src/explain.py")
-        print(f"{'='*60}\n", flush=True)
 
     except Exception as e:
         print(f"\n✗ ERROR: {e}", flush=True)

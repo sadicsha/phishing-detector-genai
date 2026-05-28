@@ -1,7 +1,7 @@
 """
 train_baseline.py
 ─────────────────
-Day 2 — Trains a RandomForest baseline classifier on hand-crafted features.
+Trains a RandomForest baseline classifier on hand-crafted features.
 Run this script directly:
     python src/train_baseline.py
 
@@ -47,10 +47,6 @@ MODELS_DIR    = Path("models")
 RESULTS_DIR   = Path("results")
 MODELS_DIR.mkdir(parents=True, exist_ok=True)
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-
-print("\n" + "="*60)
-print("  Day 2 — Baseline Classifier Training")
-print("="*60)
 
 # ── Step 1: Load data ─────────────────────────────────────────────────────────
 print("\n── Step 1: Loading dataset ──")
@@ -178,12 +174,24 @@ explainer   = shap.TreeExplainer(rf_hc)
 shap_values = explainer.shap_values(X_test_hc)
 
 # shap_values is [class0, class1] for RF — take class 1 (phishing)
-sv = shap_values[1] if isinstance(shap_values, list) else shap_values
+sv = shap_values[1] if isinstance(shap_values, list) else shap_values 
 
 fig, ax = plt.subplots(figsize=(9, 5))
 feature_names = HandCraftedFeatures.FEATURE_NAMES
-mean_shap     = np.abs(sv).mean(axis=0)
-sorted_idx    = np.argsort(mean_shap)
+mean_shap = np.abs(sv).mean(axis=0)
+
+# force true 1D vector
+while mean_shap.ndim > 1:
+    mean_shap = mean_shap.mean(axis=-1)
+
+mean_shap = np.array(mean_shap).astype(float)
+# Convert SHAP values to 1D if needed
+n = min(len(mean_shap), len(feature_names))
+
+mean_shap = mean_shap[:n]
+feature_names = feature_names[:n]
+
+sorted_idx = np.argsort(mean_shap).astype(int)
 
 colors = ["#E05C5C" if mean_shap[i] > np.median(mean_shap) else "#4A9EBF"
           for i in sorted_idx]
@@ -201,7 +209,7 @@ plt.savefig(shap_path, dpi=120, bbox_inches="tight")
 print(f"  Saved → {shap_path}")
 plt.close()
 
-# ── Step 7: Save results.md ───────────────────────────────────────────────────
+# ── Step 7: Save results.md ────mean_shap───────────────────────────────────────────────
 print("\n── Step 6: Writing results.md ──")
 
 top_features = sorted(
@@ -241,7 +249,6 @@ md += f"""
 - `results/baseline_shap_importance.png` — SHAP feature importance
 
 ## Key Insights
-- **Target to beat on Day 5:** F1 = {best['f1']:.4f} with DistilBERT
 - **Strongest feature:** {top_features[0][0]}
 - **Dataset:** 3,000 emails (1,500 phishing + 1,500 legit)
 """
@@ -251,9 +258,6 @@ results_path.write_text(md)
 print(f"  Saved → {results_path}")
 
 # ── Final summary ─────────────────────────────────────────────────────────────
-print("\n" + "="*60)
-print("  DAY 2 COMPLETE ✓")
-print("="*60)
 print(f"\n  Best model  : {best_name}")
 print(f"  F1 Score    : {best['f1']:.4f}")
 print(f"  Precision   : {best['precision']:.4f}")
@@ -262,5 +266,3 @@ print(f"  ROC-AUC     : {best['roc_auc']:.4f}")
 print(f"\n  Charts saved to : results/")
 print(f"  Model saved to  : models/baseline_model.pkl")
 print(f"  Results saved to: results/baseline_results.md")
-print(f"\n  Target to beat on Day 5 with DistilBERT: F1 > {best['f1']:.4f}")
-print("="*60 + "\n")

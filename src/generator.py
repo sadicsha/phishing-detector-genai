@@ -1,7 +1,7 @@
 """
 generator.py
 ────────────
-Day 3 — Red Team: AI-powered phishing email generator using Groq API.
+Red Team: AI-powered phishing email generator using Groq API.
 Run this script directly:
     python src/generator.py
 
@@ -283,11 +283,7 @@ def deduplicate(samples: list[EmailSample], threshold: float = 0.85) -> list[Ema
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
-    print("\n" + "="*60)
-    print("  Day 3 — Red Team: Phishing Email Generator")
-    print("="*60)
-
-    # Resume if partially generated
+       # Resume if partially generated
     existing = []
     if OUTPUT_PATH.exists():
         existing = load_jsonl(OUTPUT_PATH)
@@ -318,18 +314,12 @@ def main():
     for s in final:
         lure_counts[s.lure_type] = lure_counts.get(s.lure_type, 0) + 1
 
-    print("\n" + "="*60)
-    print("  DAY 3 COMPLETE ✓")
-    print("="*60)
     print(f"\n  Total synthetic emails : {len(final)}")
     print(f"\n  Breakdown by lure type:")
     for lure, count in sorted(lure_counts.items(), key=lambda x: -x[1]):
         bar = "█" * (count // 10)
         print(f"  {lure:<20} {count:>4}  {bar}")
     print(f"\n  Saved → {OUTPUT_PATH}")
-    print(f"\n  Next: run Day 4 to merge with real dataset")
-    print("="*60 + "\n")
-
-
+   
 if __name__ == "__main__":
     main()

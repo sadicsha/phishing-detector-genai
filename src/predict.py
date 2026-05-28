@@ -8,6 +8,7 @@ import torch.nn.functional as F
 from transformers import DistilBertTokenizerFast, DistilBertForSequenceClassification
 
 MODELS_DIR = Path("models/distilbert")
+HF_MODEL_REPO = "sadicsha/phishing-detector-distilbert"
 MAX_LENGTH = 128
 _tok = None
 _mdl = None
@@ -15,8 +16,12 @@ _mdl = None
 def _load():
     global _tok, _mdl
     if _mdl is None:
-        _tok = DistilBertTokenizerFast.from_pretrained(MODELS_DIR)
-        _mdl = DistilBertForSequenceClassification.from_pretrained(MODELS_DIR)
+        if MODELS_DIR.exists():
+            model_path = MODELS_DIR
+        else:
+            model_path = HF_MODEL_REPO
+        _tok = DistilBertTokenizerFast.from_pretrained(model_path)
+        _mdl = DistilBertForSequenceClassification.from_pretrained(model_path)
         _mdl.eval()
 
 def predict_email(subject, body):

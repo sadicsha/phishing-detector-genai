@@ -1,7 +1,7 @@
 """
 adversarial_eval.py
 ───────────────────
-Day 7 — Feed all 798 synthetic phishing emails through the detector.
+Feed all 798 synthetic phishing emails through the detector.
 Measures what % the model catches, finds evasion patterns, retrains on hard negatives.
 
 Run: python src/adversarial_eval.py
@@ -23,10 +23,6 @@ from src.predict import predict_email
 SYNTHETIC_PATH = Path("data/processed/synthetic_phishing.jsonl")
 RESULTS_DIR    = Path("results")
 RESULTS_DIR.mkdir(exist_ok=True)
-
-print("\n" + "="*60)
-print("  Day 7 — Adversarial Evaluation")
-print("="*60 + "\n")
 
 # Load synthetic phishing emails
 synth = load_jsonl(SYNTHETIC_PATH)
@@ -157,10 +153,5 @@ in emails that evaded the detector (formal tone, fewer urgency words, etc.)
 """
 (RESULTS_DIR / "adversarial_results.md").write_text(md, encoding="utf-8")
 
-print(f"\n{'='*60}")
-print(f"  DAY 7 COMPLETE")
-print(f"{'='*60}")
 print(f"  Detection rate  : {det_rate:.1f}%")
 print(f"  Evaded          : {missed} emails")
-print(f"  Next: python src/retrain_hardneg.py  (add false negatives to training)")
-print(f"{'='*60}\n")

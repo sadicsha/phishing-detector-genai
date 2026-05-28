@@ -128,10 +128,6 @@ def parse_folder(folder, label, source, limit=None):
     return samples
 
 def main():
-    print("\n" + "="*60)
-    print("  Phase 1 · Data Download & Parsing")
-    print("="*60 + "\n")
-
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 

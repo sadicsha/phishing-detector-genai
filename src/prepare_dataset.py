@@ -1,7 +1,7 @@
 """
 prepare_dataset.py
 ──────────────────
-Day 4 — Merges real + synthetic emails, runs quality checks,
+Merges real + synthetic emails, runs quality checks,
 and produces the final dataset_v2.jsonl ready for DistilBERT.
 
 Run:
@@ -44,10 +44,6 @@ RESULTS_DIR    = Path("results")
 
 SPLITS_DIR.mkdir(parents=True, exist_ok=True)
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-
-print("\n" + "="*60)
-print("  Day 4 — Dataset Merge & Preparation")
-print("="*60)
 
 # ── Step 1: Load both datasets ────────────────────────────────────────────────
 print("\n── Step 1: Loading datasets ──")
@@ -210,13 +206,7 @@ card_path.write_text(card)
 print(f"  Saved → {card_path}")
 
 # ── Final summary ─────────────────────────────────────────────────────────────
-print("\n" + "="*60)
-print("  DAY 4 COMPLETE ✓")
-print("="*60)
 print(f"\n  dataset_v2.jsonl  : {len(all_samples):,} emails")
 print(f"  Train split       : {len(train_s):,}")
 print(f"  Val split         : {len(val_s):,}")
 print(f"  Test split        : {len(test_s):,}")
-print(f"\n  Ready for Day 5 — DistilBERT fine-tuning")
-print(f"  Run: python src/train_distilbert.py")
-print("="*60 + "\n")

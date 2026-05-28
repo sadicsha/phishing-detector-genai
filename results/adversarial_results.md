@@ -3,15 +3,15 @@
 ## Summary
 | Metric | Value |
 |---|---|
-| Total synthetic phishing tested | 798 |
-| Caught by DistilBERT detector | 798 (100.0%) |
+| Total synthetic phishing tested | 800 |
+| Caught by DistilBERT detector | 800 (100.0%) |
 | Evaded detector | 0 (0.0%) |
 
 ## Detection Rate by Lure Type
 | Lure Type | Caught | Total | Rate |
 |---|---|---|---|
-| account_suspended | 133 | 133 | 100.0% |
-| it_alert | 134 | 134 | 100.0% |
+| account_suspended | 134 | 134 | 100.0% |
+| it_alert | 135 | 135 | 100.0% |
 | hr_notice | 134 | 134 | 100.0% |
 | delivery_scam | 133 | 133 | 100.0% |
 | invoice_fraud | 134 | 134 | 100.0% |
